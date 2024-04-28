@@ -7,6 +7,7 @@
 	}
 }
 
+<<<<<<< HEAD
 //提升H5端uni.toast()的层级，避免被uView的modal等遮盖
 /* #ifdef H5 */
 uni-toast {
@@ -15,6 +16,16 @@ uni-toast {
 uni-toast .uni-toast {
    z-index: 10090;
 }
+=======
+//提升H5端uni.toast()的层级，避免被uView的modal等遮盖
+/* #ifdef H5 */
+uni-toast {
+    z-index: 10090;
+}
+uni-toast .uni-toast {
+   z-index: 10090;
+}
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
 /* #endif */
 
 // 隐藏scroll-view的滚动条

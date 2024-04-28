@@ -1,3 +1,4 @@
+
 package com.example.springbootbank.controller;
 
 import com.alibaba.fastjson.JSONArray;
@@ -42,6 +43,16 @@ public class ProductController {
         List<Product> products=productMapper.selectList(null);
         if(products.size()>0){
             return Result.success(products);
+        }
+        return Result.error("300","搜索不到任何商品！");
+    }
+
+    @PostMapping("/getProductOne")//获取某个商品
+    public Result getProduct(@RequestBody Map map){
+        Integer id=(Integer)map.get("id");
+        Product product=productMapper.selectById(id);
+        if(product!=null){
+            return Result.success(product);
         }
         return Result.error("300","搜索不到任何商品！");
     }

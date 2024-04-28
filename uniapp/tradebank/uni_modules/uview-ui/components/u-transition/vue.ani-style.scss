@@ -11,6 +11,7 @@
  * slide-down：下滑进入
  * slide-left：左滑进入
  * slide-right：右滑进入
+<<<<<<< HEAD
  */
 
 $u-zoom-scale: scale(0.95);
@@ -23,6 +24,20 @@ $u-zoom-scale: scale(0.95);
 .u-fade-enter,
 .u-fade-leave-to {
 	opacity: 0
+=======
+ */
+
+$u-zoom-scale: scale(0.95);
+
+.u-fade-enter-active,
+.u-fade-leave-active {
+	transition-property: opacity;
+}
+
+.u-fade-enter,
+.u-fade-leave-to {
+	opacity: 0
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
 }
 
 .u-fade-zoom-enter,
@@ -34,6 +49,7 @@ $u-zoom-scale: scale(0.95);
 .u-fade-zoom-enter-active,
 .u-fade-zoom-leave-active {
 	transition-property: transform, opacity;
+<<<<<<< HEAD
 }
 
 .u-fade-down-enter-active,
@@ -110,4 +126,82 @@ $u-zoom-scale: scale(0.95);
 .u-zoom-enter,
 .u-zoom-leave-to {
 	transform: $u-zoom-scale
+=======
+}
+
+.u-fade-down-enter-active,
+.u-fade-down-leave-active,
+.u-fade-left-enter-active,
+.u-fade-left-leave-active,
+.u-fade-right-enter-active,
+.u-fade-right-leave-active,
+.u-fade-up-enter-active,
+.u-fade-up-leave-active {
+	transition-property: opacity, transform;
+}
+
+.u-fade-up-enter,
+.u-fade-up-leave-to {
+	transform: translate3d(0, 100%, 0);
+	opacity: 0
+}
+
+.u-fade-down-enter,
+.u-fade-down-leave-to {
+	transform: translate3d(0, -100%, 0);
+	opacity: 0
+}
+
+.u-fade-left-enter,
+.u-fade-left-leave-to {
+	transform: translate3d(-100%, 0, 0);
+	opacity: 0
+}
+
+.u-fade-right-enter,
+.u-fade-right-leave-to {
+	transform: translate3d(100%, 0, 0);
+	opacity: 0
+}
+
+.u-slide-down-enter-active,
+.u-slide-down-leave-active,
+.u-slide-left-enter-active,
+.u-slide-left-leave-active,
+.u-slide-right-enter-active,
+.u-slide-right-leave-active,
+.u-slide-up-enter-active,
+.u-slide-up-leave-active {
+	transition-property: transform;
+}
+
+.u-slide-up-enter,
+.u-slide-up-leave-to {
+	transform: translate3d(0, 100%, 0)
+}
+
+.u-slide-down-enter,
+.u-slide-down-leave-to {
+	transform: translate3d(0, -100%, 0)
+}
+
+.u-slide-left-enter,
+.u-slide-left-leave-to {
+	transform: translate3d(-100%, 0, 0)
+}
+
+.u-slide-right-enter,
+.u-slide-right-leave-to {
+	transform: translate3d(100%, 0, 0)
+}
+
+.u-zoom-enter-active,
+.u-zoom-leave-active {
+	transition-property: transform
+}
+
+.u-zoom-enter,
+.u-zoom-leave-to {
+	transform: $u-zoom-scale
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
 }

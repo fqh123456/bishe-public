@@ -1,7 +1,12 @@
 'use strict'
 
+<<<<<<< HEAD
 /**
  * @fileoverview html 解析器
+=======
+/**
+ * @fileoverview html 解析器
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 // 配置
 const config = {
@@ -63,9 +68,15 @@ config.trustTags.embed = true // #endif
 config.ignoreTags.source = void 0
 config.ignoreTags.style = void 0 // #endif
 
+<<<<<<< HEAD
 /**
  * @description 创建 map
  * @param {String} str 逗号分隔
+=======
+/**
+ * @description 创建 map
+ * @param {String} str 逗号分隔
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 function makeMap(str) {
@@ -78,11 +89,19 @@ function makeMap(str) {
 
     return map
 }
+<<<<<<< HEAD
 /**
  * @description 解码 html 实体
  * @param {String} str 要解码的字符串
  * @param {Boolean} amp 要不要解码 &amp;
  * @returns {String} 解码后的字符串
+=======
+/**
+ * @description 解码 html 实体
+ * @param {String} str 要解码的字符串
+ * @param {Boolean} amp 要不要解码 &amp;
+ * @returns {String} 解码后的字符串
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 function decodeEntity(str, amp) {
@@ -108,9 +127,15 @@ function decodeEntity(str, amp) {
 
     return str
 }
+<<<<<<< HEAD
 /**
  * @description html 解析器
  * @param {Object} vm 组件实例
+=======
+/**
+ * @description html 解析器
+ * @param {Object} vm 组件实例
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 function parser(vm) {
@@ -122,9 +147,15 @@ function parser(vm) {
     this.stack = []
     this.nodes = []
 }
+<<<<<<< HEAD
 /**
  * @description 执行解析
  * @param {String} content 要解析的文本
+=======
+/**
+ * @description 执行解析
+ * @param {String} content 要解析的文本
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.parse = function (content) {
@@ -141,8 +172,13 @@ parser.prototype.parse = function (content) {
 
     return this.nodes
 }
+<<<<<<< HEAD
 /**
  * @description 将标签暴露出来（不被 rich-text 包含）
+=======
+/**
+ * @description 将标签暴露出来（不被 rich-text 包含）
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.expose = function () {
@@ -153,10 +189,17 @@ parser.prototype.expose = function () {
         item.c = 1
     } // #endif
 }
+<<<<<<< HEAD
 /**
  * @description 处理插件
  * @param {Object} node 要处理的标签
  * @returns {Boolean} 是否要移除此标签
+=======
+/**
+ * @description 处理插件
+ * @param {Object} node 要处理的标签
+ * @returns {Boolean} 是否要移除此标签
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.hook = function (node) {
@@ -166,10 +209,17 @@ parser.prototype.hook = function (node) {
 
     return true
 }
+<<<<<<< HEAD
 /**
  * @description 将链接拼接上主域名
  * @param {String} url 需要拼接的链接
  * @returns {String} 拼接后的链接
+=======
+/**
+ * @description 将链接拼接上主域名
+ * @param {String} url 需要拼接的链接
+ * @returns {String} 拼接后的链接
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.getUrl = function (url) {
@@ -183,10 +233,17 @@ parser.prototype.getUrl = function (url) {
 
     return url
 }
+<<<<<<< HEAD
 /**
  * @description 解析样式表
  * @param {Object} node 标签
  * @returns {Object}
+=======
+/**
+ * @description 解析样式表
+ * @param {Object} node 标签
+ * @returns {Object}
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.parseStyle = function (node) {
@@ -241,20 +298,34 @@ parser.prototype.parseStyle = function (node) {
     node.attrs.style = tmp
     return styleObj
 }
+<<<<<<< HEAD
 /**
  * @description 解析到标签名
  * @param {String} name 标签名
  * @private
+=======
+/**
+ * @description 解析到标签名
+ * @param {String} name 标签名
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.onTagName = function (name) {
     this.tagName = this.xml ? name : name.toLowerCase()
     if (this.tagName == 'svg') this.xml = true // svg 标签内大小写敏感
 }
+<<<<<<< HEAD
 /**
  * @description 解析到属性名
  * @param {String} name 属性名
  * @private
+=======
+/**
+ * @description 解析到属性名
+ * @param {String} name 属性名
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.onAttrName = function (name) {
@@ -270,10 +341,17 @@ parser.prototype.onAttrName = function (name) {
         this.attrs[name] = 'T' // boolean 型属性缺省设置
     }
 }
+<<<<<<< HEAD
 /**
  * @description 解析到属性值
  * @param {String} val 属性值
  * @private
+=======
+/**
+ * @description 解析到属性值
+ * @param {String} val 属性值
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.onAttrVal = function (val) {
@@ -282,10 +360,17 @@ parser.prototype.onAttrVal = function (val) {
     if (name == 'style' || name == 'href') this.attrs[name] = decodeEntity(val, true) // 拼接主域名
     else if (name.includes('src')) this.attrs[name] = this.getUrl(decodeEntity(val, true)); else if (name) this.attrs[name] = val
 }
+<<<<<<< HEAD
 /**
  * @description 解析到标签开始
  * @param {Boolean} selfClose 是否有自闭合标识 />
  * @private
+=======
+/**
+ * @description 解析到标签开始
+ * @param {Boolean} selfClose 是否有自闭合标识 />
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.onOpenTag = function (selfClose) {
@@ -453,10 +538,17 @@ parser.prototype.onOpenTag = function (selfClose) {
 
     siblings.push(node)
 }
+<<<<<<< HEAD
 /**
  * @description 解析到标签结束
  * @param {String} name 标签名
  * @private
+=======
+/**
+ * @description 解析到标签结束
+ * @param {String} name 标签名
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.onCloseTag = function (name) {
@@ -480,9 +572,15 @@ parser.prototype.onCloseTag = function (name) {
         })
     }
 }
+<<<<<<< HEAD
 /**
  * @description 处理标签出栈
  * @private
+=======
+/**
+ * @description 处理标签出栈
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.popNode = function () {
@@ -833,9 +931,15 @@ parser.prototype.popNode = function () {
 
     attrs.style = attrs.style.substr(1) || void 0
 }
+<<<<<<< HEAD
 /**
  * @description 解析到文本
  * @param {String} text 文本内容
+=======
+/**
+ * @description 解析到文本
+ * @param {String} text 文本内容
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 parser.prototype.onText = function (text) {
@@ -864,17 +968,29 @@ parser.prototype.onText = function (text) {
         siblings.push(node)
     }
 }
+<<<<<<< HEAD
 /**
  * @description html 词法分析器
  * @param {Object} handler 高层处理器
+=======
+/**
+ * @description html 词法分析器
+ * @param {Object} handler 高层处理器
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 function lexer(handler) {
     this.handler = handler
 }
+<<<<<<< HEAD
 /**
  * @description 执行解析
  * @param {String} content 要解析的文本
+=======
+/**
+ * @description 执行解析
+ * @param {String} content 要解析的文本
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 lexer.prototype.parse = function (content) {
@@ -889,11 +1005,19 @@ lexer.prototype.parse = function (content) {
         this.state()
     }
 }
+<<<<<<< HEAD
 /**
  * @description 检查标签是否闭合
  * @param {String} method 如果闭合要进行的操作
  * @returns {Boolean} 是否闭合
  * @private
+=======
+/**
+ * @description 检查标签是否闭合
+ * @param {String} method 如果闭合要进行的操作
+ * @returns {Boolean} 是否闭合
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 lexer.prototype.checkClose = function (method) {
@@ -921,9 +1045,15 @@ lexer.prototype.checkClose = function (method) {
 
     return false
 }
+<<<<<<< HEAD
 /**
  * @description 文本状态
  * @private
+=======
+/**
+ * @description 文本状态
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 lexer.prototype.text = function () {
@@ -963,9 +1093,15 @@ lexer.prototype.text = function () {
         }
     } else this.i++
 }
+<<<<<<< HEAD
 /**
  * @description 标签名状态
  * @private
+=======
+/**
+ * @description 标签名状态
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 lexer.prototype.tagName = function () {
@@ -983,9 +1119,15 @@ lexer.prototype.tagName = function () {
         }
     } else if (!this.checkClose('onTagName')) this.i++
 }
+<<<<<<< HEAD
 /**
  * @description 属性名状态
  * @private
+=======
+/**
+ * @description 属性名状态
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 lexer.prototype.attrName = function () {
@@ -1017,9 +1159,15 @@ lexer.prototype.attrName = function () {
         }
     } else if (!this.checkClose('onAttrName')) this.i++
 }
+<<<<<<< HEAD
 /**
  * @description 属性值状态
  * @private
+=======
+/**
+ * @description 属性值状态
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 lexer.prototype.attrVal = function () {
@@ -1050,10 +1198,17 @@ lexer.prototype.attrVal = function () {
         this.state = this.attrName
     }
 }
+<<<<<<< HEAD
 /**
  * @description 结束标签状态
  * @returns {String} 结束的标签名
  * @private
+=======
+/**
+ * @description 结束标签状态
+ * @returns {String} 结束的标签名
+ * @private
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
  */
 
 lexer.prototype.endTag = function () {

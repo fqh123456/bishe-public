@@ -1,5 +1,8 @@
 package com.example.springbootbank;
 
+
+import cn.hutool.core.date.LocalDateTimeUtil;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -8,10 +11,8 @@ import com.example.springbootbank.common.CreateBankCards;
 import com.example.springbootbank.common.IdGeneratorSnowlake;
 import com.example.springbootbank.common.Result;
 import com.example.springbootbank.entity.*;
-import com.example.springbootbank.mapper.BankCardMapper;
-import com.example.springbootbank.mapper.CodeMapper;
-import com.example.springbootbank.mapper.ProductMapper;
-import com.example.springbootbank.mapper.UserMapper;
+
+import com.example.springbootbank.mapper.*;
 import com.example.springbootbank.service.CodeService;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
@@ -19,17 +20,23 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
+import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 @SpringBootTest
 @MapperScan("com.example.springbootbank.mapper")
 class SpringbootBankApplicationTests {
 
+    @Resource
     @Autowired
     private UserMapper userMapper;
 
@@ -41,21 +48,144 @@ class SpringbootBankApplicationTests {
     @Autowired
     private ProductMapper productMapper;
 
+
+    @Autowired
+    UserProductMapper userProductMapper;
+
+    @Autowired
+    CreditCardMapper creditCardMapper;
     @Test
     void contextLoads() {
-        List<Product> products=productMapper.selectList(null);
-        for(int i=0;i<products.size();i++){
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("time",products.get(i).getCreatetime());
-            jsonObject.put("rate",products.get(i).getRate());
-            List<JSONObject> list=new ArrayList<>();
-            list.add(jsonObject);
-            products.get(i).setHistoricalrate(list.toString());
-            productMapper.updateById(products.get(i));
-        }
-      }
-
+//        productwork();
+            setoverdue();
+//        cbills(10);
     }
+    //创建月初账单
+    public void cbills(Integer ccid){
+        //月初创建上个月的账单
+
+        LocalDateTime now=LocalDateTime.now();
+        now=now.plusMonths(0);//本月
+        LocalDateTime localDatestart=LocalDateTime.of(now.minusMonths(1L).with(TemporalAdjusters.firstDayOfMonth()).toLocalDate(),LocalTime.MIN);
+        LocalDateTime localDateslast=LocalDateTime.of(now.minusMonths(1L).with(TemporalAdjusters.lastDayOfMonth()).toLocalDate(),LocalTime.MAX);
+        System.out.println("月初："+localDatestart+"  月末："+localDateslast);
+        BankCard bankCard=bankCardMapper.selectById(ccid);
+        if(bankCard!=null){//存在该银行卡
+            List<Detail> details= JSONArray.parseArray(bankCard.getDetail(),Detail.class);
+            System.out.println(details);
+            Debt debt=new Debt();
+            List<Long> pays=new ArrayList<>();
+            float needreturn=0;
+            for(int i=0;i<details.size();i++){
+                //筛选出范围内的
+                if(localDateslast.isAfter(details.get(i).getPaytime())&&localDatestart.isBefore(details.get(i).getPaytime())){
+                    if(details.get(i).getType().equals("消费")||details.get(i).getType().equals("取出")){
+                        needreturn=needreturn+details.get(i).getCost();
+                        pays.add(details.get(i).getId());
+                    }
+                }
+            }
+            //创建账单
+            if(pays.size()>0){//存在账单才进入
+                debt.setInterest(0);
+                debt.setNeedreturn(Math.round(needreturn*100)/100f);
+                debt.setDays(0);
+                debt.setId(IdGeneratorSnowlake.getInstance().snowflakeId());
+                debt.setCost(Math.round(needreturn*100)/100f);
+                debt.setReturnmoney(0);
+                //后面要改
+                debt.setTime(localDatestart.plusMonths(1).toLocalDate());
+                debt.setTimelast(localDatestart.plusMonths(1).plusDays(9).toLocalDate());
+                //
+                debt.setBills(pays);
+                //添加账单
+                CreditCard creditCard=creditCardMapper.selectOne(Wrappers.<CreditCard>lambdaQuery().eq(CreditCard::getCid,ccid));
+                if(creditCard!=null){//存在该信用卡
+                    List<Debt> Debts= JSONArray.parseArray(creditCard.getDebt(),Debt.class);
+                    Debts.add(debt);
+                    creditCard.setDebt(JSONArray.toJSONString(Debts));
+                    System.out.println(creditCard);
+                    creditCardMapper.updateById(creditCard);
+                }
+                else {
+                    System.out.println("不存在该信用卡卡");
+                }
+            }
+        }
+        else{
+            System.out.println("不存在该银行卡");
+        }
+    }
+    //每天检查是否存在逾期账单并设置逾期天数
+    public void setoverdue(){
+        List<CreditCard> creditCards=creditCardMapper.selectList(null);//获取所有的信用卡
+        for(int i=0;i<creditCards.size();i++){
+            Integer flag=0;
+            List<Debt> Debts= JSONArray.parseArray(creditCards.get(i).getDebt(),Debt.class);
+            for(int j=0;j<Debts.size();j++){
+                if((Debts.get(j).getNeedreturn()+Debts.get(j).getInterest())>=0.01){//账单未还清
+                    if(Debts.get(j).getDays()>0){//已经逾期的
+                        flag=1;
+                        Debts.get(j).setDays(Debts.get(j).getDays()+1);
+                        float rates=Debts.get(j).getInterest()+(Debts.get(j).getNeedreturn()+Debts.get(j).getInterest())*((creditCards.get(i).getRate()));//每日利率
+                        BigDecimal bigDecimal=new BigDecimal(rates);
+                        float balance2=bigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
+                        Debts.get(j).setInterest(balance2);
+                    }
+                    else{//尚未逾期的
+                        LocalDate now=LocalDate.now();
+                        if(Debts.get(j).getTimelast().isBefore(now)){//第一天逾期
+                            flag=1;
+                            Debts.get(j).setDays(1);
+                            float overdue=Debts.get(j).getNeedreturn()*creditCards.get(i).getOverdue();//本金滞留金
+                            float rates=Debts.get(j).getNeedreturn()*creditCards.get(i).getRate();//每日利率
+                            BigDecimal bigDecimal=new BigDecimal(rates+overdue);
+                            float balance2=bigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
+                            Debts.get(j).setInterest(balance2);
+                        }
+                    }
+                }
+            }
+            if(flag==1){//有修改的
+                creditCards.get(i).setDebt(JSONArray.toJSONString(Debts));
+//                creditCardMapper.updateById(creditCards.get(i));
+                System.out.println(Debts);
+            }
+        }
+    }
+    //理财产品收益
+    public void productwork(){
+        List<UserProduct> userProducts=userProductMapper.selectList(null);
+        for(int i=0;i<userProducts.size();i++){
+            //获取当前用户的理财产品购买记录
+            List<UserProductDetails> details= JSONArray.parseArray(userProducts.get(i).getProduct(),UserProductDetails.class);
+            int flag=0;//看该用户其下是否有产品的余额发生了变化,用于节省性能
+
+            for(int j=0;j<details.size();j++){//该用户购买的所有产品
+                if(details.get(j).getState()==1){//该用户的该产品还未结束
+                    flag=1;
+                    Product product=productMapper.selectById(details.get(j).getProductid());
+                    float balance=0;
+                    if(product.getType()==2){//限期（七日年化）
+                        balance=details.get(j).getBalance()*((float) ((100+product.getRate()/7)/100));
+                    }
+                    else {//固期，固期利率
+                        float rate=(float) (100+(product.getRate()/(product.getMinday())))/100;
+                        balance=(details.get(j).getBalance())*(rate);
+                    }
+                    BigDecimal bigDecimal=new BigDecimal(balance);
+                    float balance2=bigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP).floatValue();
+                    details.get(j).setBalance(balance2);
+                }
+            }
+            if(flag==1){//更新该用户的理财产品情况
+                userProducts.get(i).setProduct(JSONArray.toJSONString(details));
+                userProductMapper.updateById(userProducts.get(i));
+            }
+        }
+    }
+
+}
 @Data
 class historicalrate{
     public LocalDateTime time;

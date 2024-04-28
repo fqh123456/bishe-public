@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 export default {
     props: {
+=======
+export default {
+    props: {
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
         // 标题选中时的样式
         activeStyle: {
             type: [String, Object],
@@ -60,6 +65,11 @@ export default {
         menuIconSize: {
             type: [Number, String],
             default: 14
+<<<<<<< HEAD
         }
     }
+=======
+        }
+    }
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
 }

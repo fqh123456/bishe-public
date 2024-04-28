@@ -1,3 +1,4 @@
+
 package com.example.springbootbank.controller;
 
 import com.alibaba.fastjson.JSONArray;
@@ -6,9 +7,11 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.example.springbootbank.common.CreateBankCards;
 import com.example.springbootbank.common.Result;
 import com.example.springbootbank.entity.BankCard;
+import com.example.springbootbank.entity.CreditCard;
 import com.example.springbootbank.entity.Detail;
 import com.example.springbootbank.entity.User;
 import com.example.springbootbank.mapper.BankCardMapper;
+import com.example.springbootbank.mapper.CreditCardMapper;
 import com.example.springbootbank.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +38,10 @@ public class BankCardController {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    CreditCardMapper creditCardMapper;
+
+    //创建银行卡
     @PostMapping("/creatBankcards")
     public Result creatBankcards(@RequestBody Map map){
         System.out.println(map);
@@ -56,7 +63,21 @@ public class BankCardController {
         bankCard.setDetail("[]");
         bankCardMapper.insert(bankCard);
         User user=userMapper.selectById(uid);
+        //信用卡办理
+        if(type==3){
+            CreditCard card=new CreditCard();
+            card.setCid(bankCard.getId());
+            card.setStages("[]");
+            card.setDebt("[]");
+            card.setLimits(1000);
+            card.setOverdue((float) 0.05);
+            card.setRate((float) 0.0005);
+            creditCardMapper.insert(card);
+            bankCard.setBalance(card.getLimits());
+            bankCardMapper.updateById(bankCard);
+        }
 
+        //更新用户信息
         JSONArray jsonArray =new JSONArray();
         jsonArray=JSONArray.parseArray(user.getBankcards());
         Map maps=new HashMap<>();
@@ -64,9 +85,35 @@ public class BankCardController {
         jsonArray.add(maps);
         user.setBankcards(jsonArray.toJSONString());
         userMapper.updateById(user);
+        //
         return Result.success(cardId);
     }
 
+    @PostMapping("/getCardsDetailbyids")//使用i账单id来获取账单信息
+    public Result getCardsDetailbyids(@RequestBody Map map){
+        Integer cid=(Integer) map.get("cid");
+        List<String> ids=(List<String>) map.get("ids");
+        System.out.println(ids);
+        List<Detail>lists=new ArrayList<>();
+        BankCard bankCard=bankCardMapper.selectById(cid);
+        if(bankCard!=null){
+            List<Detail> details=JSONArray.parseArray(bankCard.getDetail(),Detail.class);
+            System.out.println(details);
+            for(int i=0;i<ids.size();i++){
+                for(int j=0;j<details.size();j++){
+                    if(ids.get(i).equals(String.valueOf(details.get(j).getId()))){
+                        lists.add(details.get(j));
+                        break;
+                    }
+                }
+            }
+            if(lists.size()>0){
+                return Result.success(lists);
+            }
+            return Result.error("400","暂无消费记录");
+        }
+        return Result.error("404","不存在银行卡");
+    }
     @PostMapping("/getCards")//获取用户所有银行卡
     public Result getCards(@RequestBody Map map){
         Integer uid=(Integer) map.get("uid");

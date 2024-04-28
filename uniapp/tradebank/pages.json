@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
@@ -113,4 +114,145 @@
 			}
 		]
 	}
+=======
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path" : "pages/login/login",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"enablePullDownRefresh" : false
+			}
+		},
+		
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path" : "pages/person/person",
+			"style" : 
+			{
+				"navigationBarTitleText" : "个人",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/product/product",
+			"style" : 
+			{
+				"navigationBarTitleText" : "理财产品",
+				"enablePullDownRefresh" : true
+			}
+		},
+		{
+			"path" : "pages/bankcards/bankcards",
+			"style" : 
+			{
+				"navigationBarTitleText" : "银行卡",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/bankcards/detail/detail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "明细",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/bankcards/transfer/transfer",
+			"style" : 
+			{
+				"navigationBarTitleText" : "转账",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/product/detail/detail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "理财产品",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/product/buyproduct/buyproduct",
+			"style" : 
+			{
+				"navigationBarTitleText" : "理财购买",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/bankcards/finance/finance",
+			"style" : 
+			{
+				"navigationBarTitleText" : "理财",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/bankcards/returncredit/returncredit",
+			"style" : 
+			{
+				"navigationBarTitleText" : "还款账单",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/bankcards/returncredit/returnDetailCredit/returnDetailCredit",
+			"style" : 
+			{
+				"navigationBarTitleText" : "还款",
+				"enablePullDownRefresh" : false
+			}
+		}
+		
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {},
+	"tabBar": {
+		"color": "#bfbfbf",
+		"selectedColor": "#8a8a8a",
+		"borderStyle": "black",
+		// "backgroundColor": "#ffffff",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/image/icon/home.png",
+				"selectedIconPath": "static/image/icon/home1.png"
+			},
+			{
+				"pagePath": "pages/bankcards/bankcards",
+				"text": "银行卡",
+				"iconPath": "static/image/icon/card.png",
+				"selectedIconPath": "static/image/icon/card1.png"
+			},
+			{
+				"pagePath": "pages/product/product",
+				"text": "产品",
+				"iconPath": "static/image/icon/shop.png",
+				"selectedIconPath": "static/image/icon/shop1.png"
+			},
+			{
+				"pagePath": "pages/person/person",
+				"text": "个人",
+				"iconPath": "static/image/icon/my.png",
+				"selectedIconPath": "static/image/icon/my1.png"
+				
+			}
+		]
+	}
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
 }

@@ -1,3 +1,4 @@
+
 package com.example.springbootbank.entity;
 
 import lombok.Data;

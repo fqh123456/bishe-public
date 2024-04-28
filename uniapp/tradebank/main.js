@@ -1,12 +1,21 @@
 import App from './App'
 
 // #ifndef VUE3
+<<<<<<< HEAD
 import Vue from 'vue'
 
 import uView from '@/uni_modules/uview-ui'
 Vue.use(uView)
 import './uni.promisify.adaptor'
 import { request } from '@/utils/request.js'
+=======
+import Vue from 'vue'
+
+import uView from '@/uni_modules/uview-ui'
+Vue.use(uView)
+import './uni.promisify.adaptor'
+import { request } from '@/utils/request.js'
+>>>>>>> df5742f475218251bd4c1536b5da73f88340e071
 Vue.prototype.request = request
 Vue.config.productionTip = false
 App.mpType = 'app'
